@@ -1,0 +1,108 @@
+#include<bits/stdc++.h>
+using namespace std;
+typedef long long ll;
+struct node
+{
+	ll x,y;
+	node(){
+	}
+	node(ll xx, ll yy)
+	{
+		x = xx;
+		y = yy;
+	}
+};
+struct edge
+{
+	ll v,w;
+	edge(){
+	}
+	edge(ll vv,ll ww)
+	{
+		v = vv;
+		w = ww;
+	}
+};
+vector<node>nd;
+vector<edge>g[10010];
+int main()
+{
+	ll n,m;
+	cin>>n>>m;
+	for(ll i=0;i<n;i++)
+	{
+		ll x,y;
+		cin>>x>>y;
+		node nnd(x,y);
+		nd.push_back(nnd);
+	}
+	for(ll i=0;i<m;i++)
+	{
+		ll x,y,r,t;
+		cin>>x>>y>>r>>t;
+		node nnd(x,y);
+		nd.push_back(nnd);
+		for(ll j = 0;j<n;j++)
+		{
+			if(abs(nd[j].x - x)<=r && abs(nd[j].y - y)<=r)
+			{
+				edge e1(n+i,t);
+				edge e2(j,t);
+				g[j].push_back(e1);
+				g[n+i].push_back(e2);
+//				cout<<'#'<<j<<' '<<e1.v;
+//				cout<<'\n'<<n+i<<' '<<e2.v<<"#\n";
+			}	
+			
+		}
+	}
+	
+	ll q = 0;
+	bool vis[10010]={};
+	ll dis[10010]={};
+	memset(dis,0x3f,sizeof dis);
+	ll mm = 0x3f3f3f3f;
+	dis[q] = 0;
+	vis[q] = 1;
+	ll k=q;
+	for(ll i=0;i<g[q].size();i++)
+	{
+		ll v = g[q][i].v,w = g[q][i].w;
+		dis[v] = w;
+		if(w<mm && !vis[v]) 
+		{
+			mm = w;
+			k = v; 
+		}
+	}
+	
+	vis[k] = 1;
+	for(ll i=0;i<m+n-1;i++)
+	{
+		ll mm = 0x3f3f3f3f;
+		q = k;
+		for(ll j=0;j<g[q].size();j++)
+		{
+			ll v = g[q][j].v, w = g[q][j].w;
+			dis[v] = min(dis[v],dis[q]+w);
+		}
+		for(ll j=0;j<m+n;j++)
+		{
+			if(!vis[j] && dis[j]<mm)
+			{
+				mm = dis[j];
+				k = j;
+			}
+		}
+		vis[k] = 1;
+		q = k;
+	}
+	if(vis[n-1]) cout<<dis[n-1]/2;
+	else cout<<"Nan";
+	return 0;
+}
+//2 1
+//0 0
+//1 0
+//1 1
+//2 1061109567

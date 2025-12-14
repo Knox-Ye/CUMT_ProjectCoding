@@ -1,0 +1,84 @@
+#include<bits/stdc++.h>
+using namespace std;
+map<char,char>mp;
+vector<char> nd[256];
+string f(string s,int k)
+{
+	for(int i=0;i<s.size();i++)
+	{
+		s[i] = nd[s[i]][k%(nd[s[i]].size())];
+	}
+	return s;
+}
+int main()
+{
+	for(int i=0;i<26;i++)
+		mp[char('A'+i)]=char('A'+i);
+	for(int i=0;i<26;i++)
+		mp[char('a'+i)]=char('a'+i);
+	for(int i=0;i<10;i++)
+		mp[char('0'+i)]=char('0'+i);
+	mp['#']='#';
+	mp[' ']=' ';
+	nd['#'].push_back('#');
+	string s;
+	getline(cin,s);
+	int n;
+	cin>>n;
+	cin.ignore();
+	for(int i=1;i<=n;i++)
+	{
+		string x;
+		getline(cin,x);
+		mp[x[1]] = x[2];
+	}
+	for(int i=0;i<26;i++)
+	{
+		char x = mp['A'+i];
+		nd['A'+i].push_back('A'+i);
+		while(x != 'A'+i)
+		{
+			nd['A'+i].push_back(x);
+			x = mp[x];
+		}
+	}
+	for(int i=0;i<26;i++)
+	{
+		char x = mp['a'+i];
+		nd['a'+i].push_back('a'+i);
+		while(x != 'a'+i)
+		{
+			nd['a'+i].push_back(x);
+			x = mp[x];
+		}
+	}
+	for(int i=0;i<10;i++)
+	{
+		char x = mp['0'+i];
+		nd['0'+i].push_back('0'+i);	
+		while(x != '0'+i)
+		{
+			nd['0'+i].push_back(x);
+			x = mp[x];
+		}
+	}
+	char x = mp[' '];
+	nd[' '].push_back(' ');
+	while(x != ' ')
+	{
+		nd[' '].push_back(x);
+		x = mp[x];
+	}
+	int m;
+	cin>>m;
+	while(m--)
+	{
+		int k;
+		cin>>k;
+		string ss;
+		ss = s;
+		ss = f(ss,k);
+		cout<<ss<<'\n';
+	}
+	return 0;
+}

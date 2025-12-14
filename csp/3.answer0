@@ -1,0 +1,114 @@
+#include<bits/stdc++.h>
+using namespace std;
+typedef long long ll;
+
+string ss[100010],s,t;
+int a[10];
+vector<string > v;
+vector<string > yuan,zong;
+int main()
+{
+	int n;
+	cin>>n;
+	getline(cin,t);
+	for(int i=1;i<=n;i++)
+	{
+		getline(cin,ss[i]);
+	}	
+	int flag=0;
+	while(getline(cin,s))
+	{		
+		if(flag==1)
+		{
+			if(s[0]!='+')
+			{
+				string temp="";
+				
+				
+				int len=s.size();
+				for(int i=1; i<=len-1;i++)
+				{
+					temp=temp+s[i];
+					
+				}
+				
+				yuan.push_back(temp);
+			}
+			if(s[0]!='-')
+			{
+				string temp="";
+				
+				int len=s.size();
+				for(int i=1;i<=len-1;i++)
+				{
+					temp=temp+s[i];
+					
+				}
+				v.push_back(temp);
+			}
+		}		
+		if(s[0]=='@'&&s[1]=='@')
+		{
+			flag=1;
+			int lens=s.size();
+			s=' '+s;
+			int num=0,cnt=0;
+			for(int i=1;i<=lens;i++)
+			{
+				if('0'<=s[i]&&s[i]<='9')
+				{
+					num*=10;
+					num+=s[i]-'0';
+				}
+				else
+				{
+					if(num)
+					{
+						a[++cnt]=num;
+						
+						num=0;
+					}
+				}
+			}
+			
+		}
+	}	
+	int siz=yuan.size();
+	for(int i=1;i<=n;i++)
+	{
+		bool flag=1;
+		int cnt=0;
+		for(int j=i;j<=i+siz-1;j++)
+		{
+			
+			if(yuan[cnt  ]!=ss[j])
+			{
+				flag=0;
+				break;
+			}
+			cnt++;
+		}
+		if(flag)
+		{
+			a[1]=i;
+			break;
+		}
+	}
+	bool fla=0;
+	for(int i=1;i<=n;i++)
+	{
+		if(i<a[1]  || a[1]+a[2]-1<i)
+		{
+			cout<<ss[i]<<endl;
+		}
+		else if(fla==0)
+		{
+			fla=1;
+			for(auto j:v)
+			{
+				cout<<j<<endl;
+			}
+		}
+	}
+	return 0;
+}

@@ -1,0 +1,167 @@
+#include <bits/stdc++.h>
+using namespace std;
+const long long inf=1e18;
+const int N=2e5+10;
+struct node
+{
+    int id,c;
+    node(int a,int b)
+    {
+        id=a;
+        c=b;
+    }
+};
+vector<node> v[N];
+vector<pair<int,int>> p[N];
+int x[N],l[N],r[N],sum[N],col[N];
+int main()
+{
+    int n,m,k;
+    cin>>n>>m>>k;
+    bool flag=true;
+    for(int i=1;i<=n;i++)
+    {
+        int c;
+        cin>>c;
+        col[i]=c;
+        if(c>i)
+        {
+            flag=false;
+            sum[i]=sum[i-1];
+        }
+        if(col[i-1]!=col[i])
+            sum[i]++;
+        v[1].push_back(node(i,c));
+    }
+    for(int i=1;i<=k;i++)
+    {
+        cin>>x[i]>>l[i]>>r[i];
+    }
+    for(int i=1;i<=k;i++)
+    {
+        int ans=0;
+        vector<pair<int,int>> temp;
+        for(auto j:p[x[i]])
+        {
+            int left=j.first,right=j.second;
+            if(right<l[i]||left>r[i])
+                temp.push_back(j);
+            else
+            {
+                if(left>=l[i])
+                {
+                    if(r[i]<right)
+                    {
+                        p[i+1].push_back({left,r[i]});
+                        temp.push_back({r[i]+1,right});
+                    }
+                    else
+                        p[i+1].push_back({left,right});
+                }
+                else
+                {
+                    if(r[i]<right)
+                    {
+                        p[i+1].push_back({l[i],r[i]});
+                        temp.push_back({left,l[i]-1});
+                        temp.push_back({r[i]+1,right});
+                    }
+                    else
+                    {
+                        p[i+1].push_back({l[i],right});
+                        temp.push_back({left,l[i]-1});
+                    }
+                }
+            }
+        }
+        p[x[i]]=temp;
+        int duan=0,lasttc=0;
+        for(auto j:p[i+1])
+        {
+            duan+=col[j.second]-col[j.first]+1;
+            if(lasttc==col[j.first])
+                duan--;
+            lasttc=col[j.second];
+        }
+    }
+    if(flag)
+    {
+        p[1].push_back({1, n});
+        for(int i=1;i<=k;i++)
+        {
+            int ans = 0;
+            vector<pair<int,int>> temp;
+            for(auto j:p[x[i]])
+            {
+                int left=j.first,right=j.second;
+            if(right<l[i]||r[i]<left)
+            {
+                temp.push_back(j);
+            }
+            else
+            {
+                if(l[i]<=left)
+                {
+                    if(r[i]<right)
+                    {
+                        p[i + 1].push_back({left, r[i]});
+                        temp.push_back({r[i]+1,right});
+                    }
+                    else
+                    {
+                        p[i + 1].push_back({left, right});
+                    }
+                }
+                else
+                {
+                    if (r[i]<right)
+                    {
+                        p[i+1].push_back({l[i],r[i]});
+                        temp.push_back({left,l[i]-1});
+                        temp.push_back({r[i] + 1,right});
+                    }
+                    else
+                    {
+                        p[i + 1].push_back({l[i],right});
+                        temp.push_back({left,l[i]-1});
+                    }
+                }
+            }
+        }
+        p[x[i]]=temp;
+        int duan=0,lasttc=0;
+        for(auto j:p[i + 1])
+        {
+            duan+=col[j.second]-col[j.first]+1;
+            if(lasttc==col[j.first])
+                duan--;
+            lasttc=col[j.second];
+        }
+        }
+    }
+    for(int i=1;i<=k;i++)
+    {
+        vector<node> temp;
+        for(auto j:v[x[i]])
+        {
+            if(l[i]<=j.id&&j.id<=r[i])
+                v[i+1].push_back(j);
+            else
+                temp.push_back(j);
+        }
+        v[x[i]]=temp;
+        set<int> ys;
+        int duan=0,lastt=0;
+        for(auto j:v[i+1])
+        {
+            if(j.c!=lastt)
+            {
+                duan++;
+                lastt=j.c;
+            }
+            ys.insert(j.c);
+        }
+        cout<<ys.size()<<" "<<duan<<endl;
+    }
+    return 0;
+}
